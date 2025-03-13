@@ -1,14 +1,14 @@
 public abstract class Hashtable {
-    private HashObject[] table;
-    private int size;
-    public HashTable (int size) {
+    protected HashObject[] table;
+    protected int size;
+    public Hashtable(int size) {
         this.table = new HashObject[size];
     }
 
     public void insert(HashObject newItem) {
         for (int i = 0; i < size; i++) {
-            if (table[hashCode(newItem.getKey())] == null) {
-                return hashCode(newItem.getKey());
+            if (table[hashFunction(newItem)] == null) {
+                table[hashFunction(newItem)] = newItem;
             }
         }
     }
@@ -17,14 +17,17 @@ public abstract class Hashtable {
         table[search(itemToDelete)].delete();
     }
 
-    public HashObject search(HashObject itemToFind) {
+    public int search(HashObject itemToFind) {
         int i = 0;
-        while (table[hashCode(itemToFind.getKey())] != null | i != size) {
-            if (table[hashCode(itemToFind.getKey())] == itemToFind) {
-                return hashCode(itemToFind.getKey());
+        while (table[hashFunction(itemToFind)] != null | i != size) {
+            if (table[hashFunction(itemToFind)] == itemToFind) {
+                return hashFunction(itemToFind);
             } else {
                 i++;
             }
         }
+        return -1;
     }
+
+    protected abstract int hashFunction(HashObject item);
 }
