@@ -9,15 +9,17 @@ public class HashtableExperiment {
     private static double loadFactor;
     private static LinearProbing linearHash;
     private static DoubleHashing doubleHash;
+    private static int debugLevel;
+    private static int dataSource;
     public static void main(String[] args) {
         if (args.length == 0) {
             printUsage();
             return;
         }
 
-        int dataSource = Integer.parseInt(args[0]);
+        dataSource = Integer.parseInt(args[0]);
         loadFactor = Double.parseDouble(args[1]);
-        int debugLevel = 0; //Use this for gods sake
+        debugLevel = 0;
         if (args.length == 3) {
             debugLevel = Integer.parseInt(args[2]);
         }
@@ -33,7 +35,7 @@ public class HashtableExperiment {
         System.out.print("Found a twin prime table capacity: " + size
                         + "\nHashtableExperiment: Input: ");
         if (dataSource == 1) {
-            System.out.print("nextInt()");
+            System.out.print("nextInt");
             dataSource1();
         } else if (dataSource == 2) {
             System.out.print("Date");
@@ -51,6 +53,8 @@ public class HashtableExperiment {
         
         System.out.println("\n\tUsing Double Hashing");
         printResults(doubleHash);
+
+
     }
 
     private static 
@@ -58,13 +62,30 @@ public class HashtableExperiment {
         System.out.println("HashtableExperiment: size of hash table is " + hash.numUniqueItems
                         + "\n\tInserted " + hash.getNumInsertions() + " elements, of which " + (hash.getNumInsertions() - hash.getNumUniqueItems()) + " were duplicates"
                         + "\n\tAvg. no. of probes = " + String.format("%.2f", ((double)hash.getProbeCount() / hash.getNumUniqueItems())));
+        
+        if (debugLevel == 1) {
+            String filename = "";
+            if (dataSource == 1) {
+                filename += "nextint";
+            } else if (dataSource == 2) {
+                filename += "date";
+            } else if (dataSource == 3) {
+                filename += "word-list";
+            }
+            filename += "-" + loadFactor + "-";
+            if (hash.getClass() == LinearProbing.class) {
+                filename += "linear-dump.txt";
+            } else {
+                filename += "double-dump.txt";
+            }
+            hash.dumpToFile(filename);
+        }
     }
 
-    //input until load factor is met size * load factor = n or somethin
     private static void dataSource1() {
         int itemCount = (int) Math.ceil(loadFactor * size);
         Random rand = new Random();
-        while (linearHash.numUniqueItems < itemCount) { //use numUniqueItems <---------------------Next Step
+        while (linearHash.numUniqueItems < itemCount) {
             int num = rand.nextInt();
             linearHash.insert(new HashObject(num));
             doubleHash.insert(new HashObject(num));

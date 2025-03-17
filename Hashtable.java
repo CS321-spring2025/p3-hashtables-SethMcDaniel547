@@ -67,11 +67,13 @@ public abstract class Hashtable {
         PrintWriter out;
         try {
             out = new PrintWriter(fileName);
-            for (HashObject hashObject : table) {
-                out.println(hashObject);
-            }
             // loop through the hash table, and print non-null entries 
             // using toString() method in the HashObject class
+            for (int i = 0; i < size; i++) {
+                if (table[i] != null) {
+                    out.println("table[" + i + "]: " + table[i].getKey() + " " + table[i].getFrequencyCount() + " " + table[i].getProbeCount());
+                }
+            }
             out.close();
         } catch (Exception e) {
             System.err.println("Error reading the file");
