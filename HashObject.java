@@ -26,7 +26,6 @@ public class HashObject {
     }
 
     public Object getKey() {
-        probeCount++;
         return key;
     }
 
@@ -36,6 +35,10 @@ public class HashObject {
 
     public void deccrementFrequency() {
         frequencyCount--;
+    }
+
+    public void incrementPropCount() {
+        probeCount++;
     }
 
     public int getProbeCount() {

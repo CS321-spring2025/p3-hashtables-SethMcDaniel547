@@ -19,11 +19,14 @@ public class LinearProbing extends Hashtable {
     // }
 
     protected int hashFunction(HashObject item) {
-        int tableIndex = (item.hashCode()) % size;
+        //int tableIndex = (item.hashCode()) % size;
+        Object key = item.getKey();
+        int tableIndex = positiveMod(key.hashCode(), size);
         int i = 0;
         while (table[tableIndex] != null && i < size) {
             i++;
-            tableIndex = (item.hashCode() + i) % size;
+            //tableIndex = (item.hashCode() + i) % size;
+            tableIndex = positiveMod(key.hashCode() + i, size);
         }
         if (i == size) {
             return -1;

@@ -1,7 +1,7 @@
 public abstract class Hashtable {
     protected HashObject[] table;
     protected int size;
-    
+
     public Hashtable(int size) {
         this.table = new HashObject[size];
     }
@@ -29,6 +29,14 @@ public abstract class Hashtable {
         }
         return -1;
     }
+
+    protected int positiveMod (int dividend, int divisor) {
+        int quotient = dividend % divisor;
+        if (quotient < 0)
+        quotient += divisor;
+        return quotient;
+        }
+        
 
     protected abstract int hashFunction(HashObject item);
 }
