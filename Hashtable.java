@@ -67,6 +67,14 @@ public abstract class Hashtable {
        
     }
 
+    public int getProbeCount() {
+        int count = 0;
+        for (HashObject hashObject : table) {
+            count += hashObject.getProbeCount();
+        }
+        return count;
+    }
+
         
 
     protected abstract int hashFunction(HashObject item);
