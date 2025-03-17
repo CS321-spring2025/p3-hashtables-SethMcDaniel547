@@ -1,16 +1,49 @@
 public class HashObject {
-    private int key;
+    private Object key;
     private boolean deleted;
+    private int frequencyCount;
+    private int probeCount;
+
+    public HashObject(Object key) {
+        deleted = false;
+        this.key = key;
+        frequencyCount = 1;
+        probeCount = 0;
+
+    }
 
     public HashObject(int key) {
         deleted = false;
     }
-    
+
     public void delete() {
+        key = null;
         deleted = true;
     }
 
-    public int getKey() {
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public Object getKey() {
+        probeCount++;
         return key;
     }
+
+    public void incrementFrequency() {
+        frequencyCount++;
+    }
+
+    public void deccrementFrequency() {
+        frequencyCount--;
+    }
+
+    public int getProbeCount() {
+        return probeCount;
+    }
+
+    public int getFrequencyCount() {
+        return frequencyCount;
+    }
+
 }

@@ -1,6 +1,7 @@
 public abstract class Hashtable {
     protected HashObject[] table;
     protected int size;
+    
     public Hashtable(int size) {
         this.table = new HashObject[size];
     }

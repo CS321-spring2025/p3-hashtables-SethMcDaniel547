@@ -1,7 +1,7 @@
 //import java.util.LinkedList;
 
 public class TwinPrimeGenerator {
-    public static int generateTwinPrime(int min, int max) {
+    public static int generateTwinPrime(int min, int max) { //Maybe make an array to reduce rechecking?
         //LinkedList<Integer> primes = new LinkedList<Integer>();
         for (int num = min; num <= max - 2; num++) {
             if (isPrime(num) && isPrime(num + 2)) {

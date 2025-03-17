@@ -1,6 +1,6 @@
 public class DoubleHashing extends Hashtable{
 
-    public DoubleHashing() {
+    public DoubleHashing(int size) {
         super(size);
     }
 
