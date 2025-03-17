@@ -6,6 +6,7 @@ import java.util.Random;
 
 public class HashtableExperiment {
     private static int size;
+    private static double loadFactor;
     private static LinearProbing linearHash;
     private static DoubleHashing doubleHash;
     public static void main(String[] args) {
@@ -15,29 +16,55 @@ public class HashtableExperiment {
         }
 
         int dataSource = Integer.parseInt(args[0]);
-        double loadFactor = Double.parseDouble(args[1]);
-        int debugLevel = 0;
+        loadFactor = Double.parseDouble(args[1]);
+        int debugLevel = 0; //Use this for gods sake
         if (args.length == 3) {
             debugLevel = Integer.parseInt(args[2]);
         }
 
         size = TwinPrimeGenerator.generateTwinPrime(95500, 96000);
+        linearHash = new LinearProbing(size);
+        doubleHash = new DoubleHashing(size);
+        System.out.print("HashtableExperiment: ");
+        if (size <= 0) {
+            System.err.println("No prime number found within range");
+            return;
+        }
+        System.out.print("Found a twin prime table capacity: " + size
+                        + "\nHashtableExperiment: Input: ");
         if (dataSource == 1) {
+            System.out.print("nextInt()");
             dataSource1();
         } else if (dataSource == 2) {
+            System.out.print("Date");
             dataSource2();
         } else if (dataSource == 3) {
+            System.out.print("Word-List");
             dataSource3();
         } else {
             System.err.println("Error selecting data source");
         }
+        System.out.println("   Loadfactor: " + String.format("%.2f", loadFactor));
 
+        System.out.println("\n\tUsing Linear Probing");
+        printResults(linearHash);
         
+        System.out.println("\n\tUsing Double Hashing");
+        printResults(doubleHash);
     }
 
+    private static 
+    void printResults(Hashtable hash) {
+        System.out.println("HashtableExperiment: size of hash table is " + hash.numUniqueItems
+                        + "\n\tInserted " + hash.getNumInsertions() + " elements, of which " + (hash.getNumInsertions() - hash.getNumUniqueItems()) + " were duplicates"
+                        + "\n\tAvg. no. of probes = " + String.format("%.2f", ((double)hash.getProbeCount() / hash.getNumUniqueItems())));
+    }
+
+    //input until load factor is met size * load factor = n or somethin
     private static void dataSource1() {
+        int itemCount = (int) Math.ceil(loadFactor * size);
         Random rand = new Random();
-        for (int i = 0; i < size; i++) {
+        while (linearHash.numUniqueItems < itemCount) { //use numUniqueItems <---------------------Next Step
             int num = rand.nextInt();
             linearHash.insert(new HashObject(num));
             doubleHash.insert(new HashObject(num));
@@ -45,8 +72,9 @@ public class HashtableExperiment {
     }
 
     private static void dataSource2() {
+        int itemCount = (int) Math.ceil(loadFactor * size);
         long current = new Date().getTime();
-        for (int i = 0; i < size; i++) {
+        while (linearHash.numUniqueItems < itemCount) {
             current += 1000; //increase by 1 second (1000 ms)
             Date date = new Date(current);
             linearHash.insert(new HashObject(date));
@@ -56,12 +84,14 @@ public class HashtableExperiment {
 
     private static void dataSource3() {
         try {
+            int itemCount = (int) Math.ceil(loadFactor * size);
             BufferedReader br = new BufferedReader(new FileReader("word-list.txt"));
-            for (int i = 0; i < size; i++) {
+            while (linearHash.numUniqueItems < itemCount) {
                 String line = br.readLine();
                 linearHash.insert(new HashObject(line));
                 doubleHash.insert(new HashObject(line));
             }
+            br.close();
         } catch (Exception e) {
             System.err.println("Error reading the file");
             e.printStackTrace();

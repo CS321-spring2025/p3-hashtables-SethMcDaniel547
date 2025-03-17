@@ -9,13 +9,19 @@ public class DoubleHashing extends Hashtable{
         Object key = item.getKey();
         int tableIndex = positiveMod(key.hashCode(), size);
         int i = 0;
-        while (table[tableIndex] != null && i < size) {
+        int numProbe = 1;
+        while (!item.equals(table[tableIndex]) && table[tableIndex] != null && i < size) {
             i++;
             //tableIndex = (item.hashCode() + i * item.hashCode()) % size;
-            tableIndex = 1 + positiveMod (key.hashCode(), size - 2);
+            //tableIndex = 1 + positiveMod(key.hashCode(), size - 2);
+            tableIndex = positiveMod((positiveMod(key.hashCode(), size) + i * (1 + positiveMod(key.hashCode(), size - 2))), size); //Straight from the textbook
+            numProbe++;
         }
         if (i == size) {
             return -1;
+        }
+        if (!item.equals(table[tableIndex])) {
+            item.incrementProbeCount(numProbe);
         }
         return tableIndex;
     }

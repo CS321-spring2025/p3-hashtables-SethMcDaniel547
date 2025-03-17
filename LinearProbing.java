@@ -23,13 +23,19 @@ public class LinearProbing extends Hashtable {
         Object key = item.getKey();
         int tableIndex = positiveMod(key.hashCode(), size);
         int i = 0;
-        while (table[tableIndex] != null && i < size) {
+        int numProbe = 1;
+        while (!item.equals(table[tableIndex]) && table[tableIndex] != null && i < size) {
             i++;
+            //item.incrementProbeCount(); <---------------------------------------------- This doesnt go here, but I think this function needs to increase the probeCount
             //tableIndex = (item.hashCode() + i) % size;
+            numProbe++;
             tableIndex = positiveMod(key.hashCode() + i, size);
         }
         if (i == size) {
             return -1;
+        }
+        if (!item.equals(table[tableIndex])) {
+            item.incrementProbeCount(numProbe);
         }
         return tableIndex;
     }

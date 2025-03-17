@@ -33,12 +33,16 @@ public class HashObject {
         frequencyCount++;
     }
 
-    public void deccrementFrequency() {
+    public void decrementFrequency() {
         frequencyCount--;
     }
 
     public void incrementProbeCount() {
         probeCount++;
+    }
+
+    public void incrementProbeCount(int amount) {
+        probeCount += amount;
     }
 
     public int getProbeCount() {
@@ -49,12 +53,19 @@ public class HashObject {
         return frequencyCount;
     }
 
-    public boolean equals(Object itemToCompare) {
-        return key.equals(itemToCompare);
+    public boolean equals(HashObject itemToCompare) {
+        if (itemToCompare == null) {
+            return false;
+        }
+        if (key == itemToCompare.getKey()) {
+            return true;
+        }
+        return key.equals(itemToCompare.getKey());
     }
 
     public String toString() {
         //TODO
+        return(key.toString());
     }
 
 }

@@ -4,26 +4,39 @@ import java.io.PrintWriter;
 public abstract class Hashtable {
     protected HashObject[] table;
     protected int size;
+    protected int numUniqueItems;
+    protected int numInsertions;
 
     public Hashtable(int size) {
         this.table = new HashObject[size];
+        numInsertions = 0;
+        numUniqueItems = 0;
+        this.size = size;
     }
 
     public void insert(HashObject newItem) {
-        int numProbes = 1;
-        for (int i = 0; i < size; i++) {
-            if (table[hashFunction(newItem)] == null) {
-                table[hashFunction(newItem)] = newItem;
-                for (int j = numProbes; j > 0; j--) {
-                    table[hashFunction(newItem)].incrementProbeCount();
-                }
-
-            }
-            if (table[hashFunction(newItem)].equals(newItem)) {
-                table[hashFunction(newItem)].incrementFrequency();
-            }
-            numProbes++;
+        numInsertions++;
+        int hashedItemIndex = hashFunction(newItem);
+        if (!newItem.equals(table[hashedItemIndex])) {
+            numUniqueItems++;
+            table[hashedItemIndex] = newItem;
+        } else {
+            table[hashedItemIndex].incrementFrequency();
         }
+        // for (int i = 0; i < size; i++) { //I really dont know why Im looping here
+        //     if (table[hashedItemIndex] == null) {
+        //         table[hashedItemIndex] = newItem;
+        //         numUniqueItems++;
+        //         for (int j = numProbes; j > 0; j--) {
+        //             table[hashedItemIndex].incrementProbeCount();
+        //         }
+        //     }
+        //     if (table[hashFunction(newItem)].equals(newItem)) {
+        //         table[hashFunction(newItem)].incrementFrequency();
+        //     }
+        //     numProbes++;
+        // }
+        
     }
 
     public void delete(HashObject itemToDelete) {
@@ -70,9 +83,19 @@ public abstract class Hashtable {
     public int getProbeCount() {
         int count = 0;
         for (HashObject hashObject : table) {
-            count += hashObject.getProbeCount();
+            if (hashObject != null) {
+                count += hashObject.getProbeCount();
+            }
         }
         return count;
+    }
+
+    public int getNumUniqueItems() {
+        return numUniqueItems;
+    }
+
+    public int getNumInsertions() {
+        return numInsertions;
     }
 
         
