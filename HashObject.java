@@ -65,7 +65,7 @@ public class HashObject {
 
     public String toString() {
         //TODO
-        return(key.toString());
+        return(key.toString() + " " + getFrequencyCount() + " " + getProbeCount());
     }
 
 }

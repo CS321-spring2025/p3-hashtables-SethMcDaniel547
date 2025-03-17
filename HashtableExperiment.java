@@ -65,14 +65,14 @@ public class HashtableExperiment {
         
         if (debugLevel == 1) {
             String filename = "";
-            if (dataSource == 1) {
-                filename += "nextint";
-            } else if (dataSource == 2) {
-                filename += "date";
-            } else if (dataSource == 3) {
-                filename += "word-list";
-            }
-            filename += "-" + loadFactor + "-";
+            // if (dataSource == 1) {
+            //     filename += "nextint";
+            // } else if (dataSource == 2) {
+            //     filename += "date";
+            // } else if (dataSource == 3) {
+            //     filename += "word-list";
+            // }
+            // filename += "-" + loadFactor + "-";
             if (hash.getClass() == LinearProbing.class) {
                 filename += "linear-dump.txt";
             } else {
@@ -86,7 +86,7 @@ public class HashtableExperiment {
         int itemCount = (int) Math.ceil(loadFactor * size);
         Random rand = new Random();
         while (linearHash.numUniqueItems < itemCount) {
-            int num = rand.nextInt();
+            Integer num = rand.nextInt();
             linearHash.insert(new HashObject(num));
             doubleHash.insert(new HashObject(num));
         }
@@ -109,8 +109,26 @@ public class HashtableExperiment {
             BufferedReader br = new BufferedReader(new FileReader("word-list.txt"));
             while (linearHash.numUniqueItems < itemCount) {
                 String line = br.readLine();
+                int oldUniqueCount = linearHash.getNumUniqueItems(); 
                 linearHash.insert(new HashObject(line));
+                if (debugLevel == 2) {
+                    if (linearHash.getNumUniqueItems() > oldUniqueCount) {
+                        System.out.print("Insert was successful");
+                    } else {
+                        System.out.print("Insert was a duplicate");
+                    }
+                    System.out.println(" [" + new HashObject(line) + "]");
+                }
+                oldUniqueCount = doubleHash.getNumUniqueItems(); 
                 doubleHash.insert(new HashObject(line));
+                if (debugLevel == 2) {
+                    if (doubleHash.getNumUniqueItems() > oldUniqueCount) {
+                        System.out.print("Insert was successful");
+                    } else {
+                        System.out.print("Insert was a duplicate");
+                    }
+                    System.out.println(" [" + new HashObject(line) + "]");
+                }
             }
             br.close();
         } catch (Exception e) {
