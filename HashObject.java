@@ -37,7 +37,7 @@ public class HashObject {
         frequencyCount--;
     }
 
-    public void incrementPropCount() {
+    public void incrementProbeCount() {
         probeCount++;
     }
 
@@ -47,6 +47,14 @@ public class HashObject {
 
     public int getFrequencyCount() {
         return frequencyCount;
+    }
+
+    public boolean equals(Object itemToCompare) {
+        return key.equals(itemToCompare);
+    }
+
+    public String toString() {
+        //TODO
     }
 
 }
