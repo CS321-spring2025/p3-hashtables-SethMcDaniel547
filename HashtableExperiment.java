@@ -1,5 +1,9 @@
+/**
+ * A driver class to test 2 implementations of a hash table
+ * 
+ * @author Seth McDaniel
+ */
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Date;
 import java.util.Random;
@@ -12,11 +16,13 @@ public class HashtableExperiment {
     private static int debugLevel;
     private static int dataSource;
     public static void main(String[] args) {
+        // Check if args are correct
         if (args.length == 0) {
             printUsage();
             return;
         }
 
+        //Parse args
         dataSource = Integer.parseInt(args[0]);
         loadFactor = Double.parseDouble(args[1]);
         debugLevel = 0;
@@ -24,9 +30,12 @@ public class HashtableExperiment {
             debugLevel = Integer.parseInt(args[2]);
         }
 
+        //Calculate table size
         size = TwinPrimeGenerator.generateTwinPrime(95500, 96000);
         linearHash = new LinearProbing(size);
         doubleHash = new DoubleHashing(size);
+
+        //Start ouput
         System.out.print("HashtableExperiment: ");
         if (size <= 0) {
             System.err.println("No prime number found within range");
@@ -34,6 +43,8 @@ public class HashtableExperiment {
         }
         System.out.print("Found a twin prime table capacity: " + size
                         + "\nHashtableExperiment: Input: ");
+        
+        //Select which data source to use
         if (dataSource == 1) {
             System.out.print("nextInt");
             dataSource1();
@@ -46,6 +57,8 @@ public class HashtableExperiment {
         } else {
             System.err.println("Error selecting data source");
         }
+
+        //Format results
         System.out.println("   Loadfactor: " + String.format("%.2f", loadFactor));
 
         System.out.println("\n\tUsing Linear Probing");
@@ -57,22 +70,19 @@ public class HashtableExperiment {
 
     }
 
-    private static 
-    void printResults(Hashtable hash) {
+    /**
+     * Format and print out results and performance of provided hash table
+     * 
+     * @param hash The hashtable object to gather results from
+     */
+    private static void printResults(Hashtable hash) {
         System.out.println("HashtableExperiment: size of hash table is " + hash.numUniqueItems
                         + "\n\tInserted " + hash.getNumInsertions() + " elements, of which " + (hash.getNumInsertions() - hash.getNumUniqueItems()) + " were duplicates"
                         + "\n\tAvg. no. of probes = " + String.format("%.2f", ((double)hash.getProbeCount() / hash.getNumUniqueItems())));
-        
+
+        //If debug level 1, store data into file
         if (debugLevel == 1) {
             String filename = "";
-            // if (dataSource == 1) {
-            //     filename += "nextint";
-            // } else if (dataSource == 2) {
-            //     filename += "date";
-            // } else if (dataSource == 3) {
-            //     filename += "word-list";
-            // }
-            // filename += "-" + loadFactor + "-";
             if (hash.getClass() == LinearProbing.class) {
                 filename += "linear-dump.txt";
             } else {
@@ -82,6 +92,7 @@ public class HashtableExperiment {
         }
     }
 
+    //Use random int values as data
     private static void dataSource1() {
         int itemCount = (int) Math.ceil(loadFactor * size);
         Random rand = new Random();
@@ -92,6 +103,7 @@ public class HashtableExperiment {
         }
     }
 
+    //Use date values as data
     private static void dataSource2() {
         int itemCount = (int) Math.ceil(loadFactor * size);
         long current = new Date().getTime();
@@ -103,6 +115,7 @@ public class HashtableExperiment {
         }
     }
 
+    //Use words from a file as data
     private static void dataSource3() {
         try {
             int itemCount = (int) Math.ceil(loadFactor * size);
@@ -111,6 +124,8 @@ public class HashtableExperiment {
                 String line = br.readLine();
                 int oldUniqueCount = linearHash.getNumUniqueItems(); 
                 linearHash.insert(new HashObject(line));
+
+                //Debug level 2 give additional information about insertion into linear hash
                 if (debugLevel == 2) {
                     if (linearHash.getNumUniqueItems() > oldUniqueCount) {
                         System.out.print("Insert was successful");
@@ -121,6 +136,8 @@ public class HashtableExperiment {
                 }
                 oldUniqueCount = doubleHash.getNumUniqueItems(); 
                 doubleHash.insert(new HashObject(line));
+
+                //Debug level 2 give additional information about insertion into double hash
                 if (debugLevel == 2) {
                     if (doubleHash.getNumUniqueItems() > oldUniqueCount) {
                         System.out.print("Insert was successful");
@@ -137,6 +154,7 @@ public class HashtableExperiment {
         }
     }
 
+    //Print out usage to the console
     private static void printUsage() {
         System.out.println(
             "Usage: java HashtableExperiment <dataSource> <loadFactor> [<debugLevel>]\n" +

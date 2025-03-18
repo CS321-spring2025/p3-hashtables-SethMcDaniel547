@@ -1,4 +1,8 @@
-import java.io.FileNotFoundException;
+/**
+ * An abstract Hash table that requires an implementation of the hashFunction
+ * 
+ * @author Seth McDaniel
+ */
 import java.io.PrintWriter;
 
 public abstract class Hashtable {
@@ -7,6 +11,11 @@ public abstract class Hashtable {
     protected int numUniqueItems;
     protected int numInsertions;
 
+    /**
+     * A constructor for the hash table
+     * 
+     * @param size The size of the table
+     */
     public Hashtable(int size) {
         this.table = new HashObject[size];
         numInsertions = 0;
@@ -14,6 +23,11 @@ public abstract class Hashtable {
         this.size = size;
     }
 
+    /**
+     * Insert a HashObject into the hash table using the hashFunction
+     * 
+     * @param newItem The hashObject to add
+     */
     public void insert(HashObject newItem) {
         numInsertions++;
         int hashedItemIndex = hashFunction(newItem);
@@ -22,27 +36,24 @@ public abstract class Hashtable {
             table[hashedItemIndex] = newItem;
         } else {
             table[hashedItemIndex].incrementFrequency();
-        }
-        // for (int i = 0; i < size; i++) { //I really dont know why Im looping here
-        //     if (table[hashedItemIndex] == null) {
-        //         table[hashedItemIndex] = newItem;
-        //         numUniqueItems++;
-        //         for (int j = numProbes; j > 0; j--) {
-        //             table[hashedItemIndex].incrementProbeCount();
-        //         }
-        //     }
-        //     if (table[hashFunction(newItem)].equals(newItem)) {
-        //         table[hashFunction(newItem)].incrementFrequency();
-        //     }
-        //     numProbes++;
-        // }
-        
+        }  
     }
 
+    /**
+     * Deletes an item by wiping it's key and flagging it as deleted
+     * 
+     * @param itemToDelete The item to delete
+     */
     public void delete(HashObject itemToDelete) {
         table[search(itemToDelete)].delete();
     }
 
+    /**
+     * Searches the hash table for specified item
+     * 
+     * @param itemToFind The item to find
+     * @return The index within the hash table of the item
+     */
     public int search(HashObject itemToFind) {
         int i = 0;
         while (table[hashFunction(itemToFind)] != null | i != size) {
@@ -55,6 +66,13 @@ public abstract class Hashtable {
         return -1;
     }
 
+    /**
+     * A mod function that ensures no negative values are returned
+     * 
+     * @param dividend The quantity to be modded
+     * @param divisor The quantity to mod by
+     * @return
+     */
     protected int positiveMod (int dividend, int divisor) {
         int quotient = dividend % divisor;
         if (quotient < 0)
@@ -63,12 +81,15 @@ public abstract class Hashtable {
         }
 
     
+    /**
+     * Formats data in hash table for a file
+     * 
+     * @param fileName The name of the file to save to
+     */
     public void dumpToFile(String fileName) {
         PrintWriter out;
         try {
             out = new PrintWriter(fileName);
-            // loop through the hash table, and print non-null entries 
-            // using toString() method in the HashObject class
             for (int i = 0; i < size; i++) {
                 if (table[i] != null) {
                     out.println("table[" + i + "]: " + table[i].getKey() + " " + table[i].getFrequencyCount() + " " + table[i].getProbeCount());
@@ -82,6 +103,11 @@ public abstract class Hashtable {
        
     }
 
+    /**
+     * Counts up the amount of probes used so far
+     * 
+     * @return probe count
+     */
     public int getProbeCount() {
         int count = 0;
         for (HashObject hashObject : table) {
@@ -92,15 +118,23 @@ public abstract class Hashtable {
         return count;
     }
 
+    /**
+     * Get the number of unique items in the hash table
+     * 
+     * @return Number of unique items in the table
+     */
     public int getNumUniqueItems() {
         return numUniqueItems;
     }
 
+    /**
+     * Get the number of insertions, including duplicates and unique values
+     * 
+     * @return number of insertions
+     */
     public int getNumInsertions() {
         return numInsertions;
     }
-
-        
 
     protected abstract int hashFunction(HashObject item);
 }
